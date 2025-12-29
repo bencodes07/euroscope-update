@@ -7,6 +7,15 @@ class CustomSettings:
     def __init__(self, config):
         self.config = config
 
+    def _get_base_dir(self, package_info: Dict[str, str]) -> Path:
+        """Get base directory for the package"""
+        base_dir = self.config.euroscope_docs
+
+        if self.config.use_subdirs:
+            base_dir = base_dir / package_info["fir"]
+
+        return base_dir
+
     def apply_all_settings(self, package_info: Dict[str, str]):
         """Apply all custom settings for the package"""
         print("⚙️  Applying custom settings...")
@@ -198,15 +207,7 @@ class CustomSettings:
 
                 # Disable Leadin Lines for EDDL
                 content = re.sub(
-                    r"(MAP:Leadin Lines\s+AIRPORT:EDDL\s+FOLDER:Airport Layout\s+COLOR:layout-taxiline-yellow)\s*(\n//)",
-                    r"\1\nACTIVE:0\2",
-                    content,
-                    flags=re.MULTILINE,
-                )
-
-                # Disable Aircraft Icons for EDDL
-                content = re.sub(
-                    r"(MAP:Aircraft Outlines\s+AIRPORT:EDDL\s+FOLDER:Apron Info\s+ACTIVE:)1",
+                    r"(MAP:Leadin Lines\s+AIRPORT:EDDL\s+FOLDER:Airport Layout\s+ACTIVE:)1",
                     r"\g<1>0",
                     content,
                     flags=re.MULTILINE,
@@ -336,11 +337,13 @@ class CustomSettings:
                 "m_ControllerListY": "45",
             },
         )
+        
+        self._update_edmm_twr_night_recent_files(base_dir)
 
     def _apply_edww_settings(self, base_dir: Path):
         """EDWW-specific settings - modify as you like!"""
+        
 
-        # Screen settings for multiple profiles
         screen_files = [
             "EDWW/Settings/Settings EDWW/SCREEN.txt",
             "EDWW/Settings/Settings EDUU/SCREEN.txt",
@@ -362,10 +365,40 @@ class CustomSettings:
         self.update_file(
             base_dir / "EDWW/Settings/Settings EDWW/SCREEN.txt",
             {
-                "m_MetarListX": "1431",
+                "m_MetarListX": "713",
                 "m_MetarListY": "45",
-                "m_ControllerListX": "1574",
-                "m_ControllerListY": "45",
+                "m_VoiceListX": "1857",
+                "m_VoiceListY": "381",
+                "m_ControllerListX": "712",
+                "m_ControllerListY": "77",
+            },
+        )
+
+        # ===== PHX Symbology Night Settings =====
+        self.update_file(
+            base_dir / "EDWW/Settings/Settings PHX/SYMBOLOGY NIGHT.txt",
+            {
+                "Datablock:AC list background": "0:3.2:0:0:7",
+                "Other:list header": "11447982:3.5:0:0:7",
+                "Controller:normal": "16777215:3.5:0:0:7",
+                "Controller:breaking": "4227327:3.5:0:0:7",
+                "Controller:timeout": "255:4.0:0:0:7",
+                "Metar:normal": "11447982:3.5:0:0:7",
+                "Metar:modified": "33023:3.5:0:0:7",
+                "Metar:timeout": "255:3.5:0:0:7",
+                "Other:freetext": "8454143:3.5:0:1:7",
+                "Chat:background": "0:3.5:0:0:7",
+                "Chat:name normal": "10790052:3.5:0:0:7",
+                "Chat:name unread": "16777215:3.5:0:0:7",
+            },
+        )
+
+        # ===== EDWW Departure List Settings =====
+        self.update_file(
+            base_dir / "EDWW/Settings/Settings PHX/DEP.txt",
+            {
+                "m_X": "0",
+                "m_Y": "45",
             },
         )
 
@@ -373,13 +406,17 @@ class CustomSettings:
         self.update_file(
             base_dir / "EDWW/Plugins/TOPSKY EDWW/TopSkySettings.txt",
             {
-                "Window_MsgIn": "1,0,900",
-                "Window_CARD": "3,1350,1180",
-                "Window_CPDLC_Current": "1,0,650",
-                "Window_CPDLC_Setting": "1,368,650",
+                "Window_ASM": "0,80,120,570,300",
+                "Window_QNHTL": "0,1637,551",
+                "Window_CARD": "0,1565,755",
+                "Window_LFUNCFP": "0,1570,44",
+                "Window_CPDLC_Current": "0,0,650",
+                "Window_CPDLC_Setting": "1,0,471",
             },
             delimiter="=",
         )
+        
+        self._update_edww_twr_night_recent_files(base_dir)
 
     def _apply_edxx_settings(self, base_dir: Path):
         """EDXX (FIS) specific settings - modify as you like!"""
@@ -424,6 +461,74 @@ class CustomSettings:
                 "m_ControllerListY": "45",
             },
         )
+        
+    def _update_edww_twr_night_recent_files(self, base_dir: Path):
+        if self.config.use_subdirs:
+            twr_night_profile = base_dir / "EDWW FIR - TWR PHX NIGHT.prf"
+        else:
+            twr_night_profile = base_dir / "EDWW/EDWW FIR - TWR PHX NIGHT.prf"
+        
+        if not twr_night_profile.exists():
+            print("      ⚠️  EDWW TWR Night profile not found")
+            return
+
+        try:
+            with open(twr_night_profile, "r", encoding="iso-8859-1") as f:
+                lines = f.readlines()
+
+            # Find and remove existing RecentFiles entries
+            filtered_lines = [line for line in lines if not line.startswith("RecentFiles\t")]
+
+            # Add new RecentFiles entries at the end
+            new_recent_files = [
+                "RecentFiles\tRecent1\t\\EDWW\\ASR\\EDWW-TWR.asr\n",
+                "RecentFiles\tRecent2\t\\EDWW\\ASR\\EDDB_GND.asr\n",
+                "RecentFiles\tRecent3\t\\EDWW\\ASR\\EDDH_GND.asr\n"
+            ]
+            
+            filtered_lines.extend(new_recent_files)
+
+            with open(twr_night_profile, "w", encoding="iso-8859-1") as f:
+                f.writelines(filtered_lines)
+
+            print(f"      ✓ Updated recent files in EDWW TWR Night profile")
+
+        except Exception as e:
+            print(f"      ⚠️  Error updating EDWW TWR Night recent files: {e}")
+
+    def _update_edmm_twr_night_recent_files(self, base_dir: Path):
+        if self.config.use_subdirs:
+            twr_night_profile = base_dir / "TWR_PHX_NIGHT.prf"
+        else:
+            twr_night_profile = base_dir / "EDMM/TWR_PHX_NIGHT.prf"
+        
+        if not twr_night_profile.exists():
+            print("      ⚠️  EDMM TWR PHX Night profile not found")
+            return
+
+        try:
+            with open(twr_night_profile, "r", encoding="iso-8859-1") as f:
+                lines = f.readlines()
+
+            # Find and remove existing RecentFiles entries
+            filtered_lines = [line for line in lines if not line.startswith("RecentFiles\t")]
+
+            # Add new RecentFiles entries at the end
+            new_recent_files = [
+                "RecentFiles\tRecent1\t\\EDMM\\ASR\\TWR_PHX\\EDDM_GND.asr\n",
+                "RecentFiles\tRecent2\t\\EDMM\\ASR\\TWR_PHX\\ALL_EDMM_TWR.asr\n"
+            ]
+            
+            filtered_lines.extend(new_recent_files)
+
+            with open(twr_night_profile, "w", encoding="iso-8859-1") as f:
+                f.writelines(filtered_lines)
+
+            print(f"      ✓ Updated recent files in EDMM TWR PHX Night profile")
+
+        except Exception as e:
+            print(f"      ⚠️  Error updating EDMM TWR PHX Night recent files: {e}")
+
 
     # ============================================================================
     # HELPER METHODS - USE THESE TO CREATE CUSTOMIZATIONS
