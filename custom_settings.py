@@ -61,7 +61,7 @@ class CustomSettings:
     def _apply_edgg_settings(self, base_dir: Path):
         # ===== EDGG Main Radar Screen =====
         self.update_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_Screen.txt",
+            base_dir / "EDGG/Settings/EDGG/Screen.txt",
             {
                 "m_ScreenNumber": "0",
                 "m_ScreenPosition": "0",
@@ -89,31 +89,31 @@ class CustomSettings:
 
         # ===== EDGG Plugin Settings - Hide Traffic Management Lists =====
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_Plugins.txt",
+            base_dir / "EDGG/Settings/EDGG/Plugins.txt",
             r"TopSky plugin:ACList/Traffic Management List 1/m_Visible:1",
             "TopSky plugin:ACList/Traffic Management List 1/m_Visible:0",
         )
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_Plugins.txt",
+            base_dir / "EDGG/Settings/EDGG/Plugins.txt",
             r"TopSky plugin:ACList/Traffic Management List 2/m_Visible:1",
             "TopSky plugin:ACList/Traffic Management List 2/m_Visible:0",
         )
 
         # ===== EDUU Screen Settings =====
         self.update_file(
-            base_dir / "EDGG/Settings/EDUU/EDUU_Screen.txt",
+            base_dir / "EDGG/Settings/EDUU/Screen.txt",
             {"m_ScreenNumber": "0", "m_ScreenPosition": "0", "m_ScreenMaximized": "0"},
         )
 
         # ===== EDYY Screen Settings =====
         self.update_file(
-            base_dir / "EDGG/Settings/EDYY/EDYY_Screen.txt",
+            base_dir / "EDGG/Settings/EDYY/Screen.txt",
             {"m_ScreenNumber": "0", "m_ScreenPosition": "0", "m_ScreenMaximized": "0"},
         )
 
         # ===== PHX (Tower) Screen Settings =====
         self.update_file(
-            base_dir / "EDGG/Settings/PHX/PHX_Screen.txt",
+            base_dir / "EDGG/Settings/PHX/Screen.txt",
             {
                 "m_ScreenMaximized": "0",
                 "m_MetarListX": "713",
@@ -127,7 +127,7 @@ class CustomSettings:
 
         # ===== PHX Symbology Night Settings =====
         self.update_file(
-            base_dir / "EDGG/Settings/PHX/PHX_Symbology_Night.txt",
+            base_dir / "EDGG/Settings/PHX/Symbology_Night.txt",
             {
                 "Datablock:AC list background": "0:3.2:0:0:7",
                 "Other:list header": "11447982:3.5:0:0:7",
@@ -146,39 +146,39 @@ class CustomSettings:
 
         # ===== EDGG Departure List Settings =====
         self.update_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_DepartureList.txt", {"m_X": "712"}
+            base_dir / "EDGG/Settings/EDGG/DepartureList.txt", {"m_X": "712"}
         )
 
         # ===== PHX Startup List Settings =====
         self.update_file(
-            base_dir / "EDGG/Settings/PHX/PHX_StartupList.txt", {"m_Visible": "0"}
+            base_dir / "EDGG/Settings/PHX/StartupList.txt", {"m_Visible": "0"}
         )
 
         # ===== Traffic Management List Positions =====
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_Plugins.txt",
+            base_dir / "EDGG/Settings/EDGG/Plugins.txt",
             r"Traffic Management List 1/m_X:\d+",
             "Traffic Management List 1/m_X:0",
         )
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_Plugins.txt",
+            base_dir / "EDGG/Settings/EDGG/Plugins.txt",
             r"Traffic Management List 1/m_Y:\d+",
             "Traffic Management List 1/m_Y:1005",
         )
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_Plugins.txt",
+            base_dir / "EDGG/Settings/EDGG/Plugins.txt",
             r"Traffic Management List 2/m_X:\d+",
             "Traffic Management List 2/m_X:368",
         )
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_Plugins.txt",
+            base_dir / "EDGG/Settings/EDGG/Plugins.txt",
             r"Traffic Management List 2/m_Y:\d+",
             "Traffic Management List 2/m_Y:1005",
         )
 
         # ===== General Settings - Set active airports by sectors =====
         self.update_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_General.txt",
+            base_dir / "EDGG/Settings/EDGG/General.txt",
             {"SET_SetActiveAptBySectors": "1"},
         )
 
@@ -190,10 +190,10 @@ class CustomSettings:
         )
 
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_General.txt", r"&atistype=.{3}&", "&"
+            base_dir / "EDGG/Settings/EDGG/General.txt", r"&atistype=.{3}&", "&"
         )
         self.replace_in_file(
-            base_dir / "EDGG/Settings/EDGG/EDGG_General.txt",
+            base_dir / "EDGG/Settings/EDGG/General.txt",
             r"&depfreq=",
             "&atistype=&depfreq=",
         )
@@ -240,7 +240,7 @@ class CustomSettings:
                 with open(grp_maps_file, "w", encoding="iso-8859-1") as f:
                     f.write(content)
 
-                print(f"      ✓ Updated GRP plugin maps - disabled EDDL features")
+                print("      ✓ Updated GRP plugin maps - disabled EDDL features")
 
             except Exception as e:
                 print(f"      ⚠️  Error updating GRP plugin maps: {e}")
@@ -270,7 +270,7 @@ class CustomSettings:
                     f.write(content)
 
                 print(
-                    f"      ✓ Updated TopSky maps - added ACTIVE runway conditions for EDDL downwind patterns"
+                    "      ✓ Updated TopSky maps - added ACTIVE runway conditions for EDDL downwind patterns"
                 )
 
             except Exception as e:
@@ -302,7 +302,7 @@ class CustomSettings:
                     f.write(content)
 
                 print(
-                    f"      ✓ Updated TopSky maps for TWR PHX - removed urban area and highway"
+                    "      ✓ Updated TopSky maps for TWR PHX - removed urban area and highway"
                 )
 
             except Exception as e:
@@ -311,38 +311,53 @@ class CustomSettings:
     def _apply_edmm_settings(self, base_dir: Path):
         """EDMM-specific settings - modify as you like!"""
 
-        # Screen settings
-        self.update_file(
-            base_dir / "EDMM/Settings/iCAS2/Screen.txt",
-            {
-                "m_ScreenNumber": "0",
-                "m_ScreenPosition": "0",
-                "m_ScreenMaximized": "0",
-                "m_MetarListX": "1431",
-                "m_MetarListY": "45",
-                "m_ControllerListX": "1574",
-                "m_ControllerListY": "45",
-            },
-        )
-
+        # ===== PHX (Tower) Screen Settings =====
         self.update_file(
             base_dir / "EDMM/Settings/TWR_PHX/Screen.txt",
             {
-                "m_ScreenNumber": "0",
-                "m_ScreenPosition": "0",
                 "m_ScreenMaximized": "0",
-                "m_MetarListX": "1431",
+                "m_MetarListX": "713",
                 "m_MetarListY": "45",
-                "m_ControllerListX": "1574",
-                "m_ControllerListY": "45",
+                "m_VoiceListX": "1857",
+                "m_VoiceListY": "381",
+                "m_ControllerListX": "712",
+                "m_ControllerListY": "77",
             },
         )
-        
+
+        # ===== PHX Symbology Night Settings =====
+        self.update_file(
+            base_dir / "EDMM/Settings/TWR_PHX/SymbologyNight.txt",
+            {
+                "Datablock:AC list background": "0:3.2:0:0:7",
+                "Other:list header": "11447982:3.5:0:0:7",
+                "Controller:normal": "16777215:3.5:0:0:7",
+                "Controller:breaking": "4227327:3.5:0:0:7",
+                "Controller:timeout": "255:4.0:0:0:7",
+                "Metar:normal": "11447982:3.5:0:0:7",
+                "Metar:modified": "33023:3.5:0:0:7",
+                "Metar:timeout": "255:3.5:0:0:7",
+                "Other:freetext": "8454143:3.5:0:1:7",
+                "Chat:background": "0:3.5:0:0:7",
+                "Chat:name normal": "10790052:3.5:0:0:7",
+                "Chat:name unread": "16777215:3.5:0:0:7",
+            },
+        )
+
+        # ===== EDMM Departure List Settings =====
+        self.update_file(
+            base_dir / "EDMM/Settings/TWR_PHX/DepartureList.txt", {"m_X": "0"}
+        )
+
+        # ===== PHX Startup List Settings =====
+        self.update_file(
+            base_dir / "EDMM/Settings/TWR_PHX/StartupList.txt", {"m_Visible": "0"}
+        )
+
         self._update_edmm_twr_night_recent_files(base_dir)
 
     def _apply_edww_settings(self, base_dir: Path):
         """EDWW-specific settings - modify as you like!"""
-        
 
         screen_files = [
             "EDWW/Settings/Settings EDWW/SCREEN.txt",
@@ -415,7 +430,7 @@ class CustomSettings:
             },
             delimiter="=",
         )
-        
+
         self._update_edww_twr_night_recent_files(base_dir)
 
     def _apply_edxx_settings(self, base_dir: Path):
@@ -461,13 +476,13 @@ class CustomSettings:
                 "m_ControllerListY": "45",
             },
         )
-        
+
     def _update_edww_twr_night_recent_files(self, base_dir: Path):
         if self.config.use_subdirs:
             twr_night_profile = base_dir / "EDWW FIR - TWR PHX NIGHT.prf"
         else:
             twr_night_profile = base_dir / "EDWW/EDWW FIR - TWR PHX NIGHT.prf"
-        
+
         if not twr_night_profile.exists():
             print("      ⚠️  EDWW TWR Night profile not found")
             return
@@ -485,13 +500,13 @@ class CustomSettings:
                 "RecentFiles\tRecent2\t\\EDWW\\ASR\\EDDB_GND.asr\n",
                 "RecentFiles\tRecent3\t\\EDWW\\ASR\\EDDH_GND.asr\n"
             ]
-            
+
             filtered_lines.extend(new_recent_files)
 
             with open(twr_night_profile, "w", encoding="iso-8859-1") as f:
                 f.writelines(filtered_lines)
 
-            print(f"      ✓ Updated recent files in EDWW TWR Night profile")
+            print("      ✓ Updated recent files in EDWW TWR Night profile")
 
         except Exception as e:
             print(f"      ⚠️  Error updating EDWW TWR Night recent files: {e}")
@@ -501,7 +516,7 @@ class CustomSettings:
             twr_night_profile = base_dir / "TWR_PHX_NIGHT.prf"
         else:
             twr_night_profile = base_dir / "EDMM/TWR_PHX_NIGHT.prf"
-        
+
         if not twr_night_profile.exists():
             print("      ⚠️  EDMM TWR PHX Night profile not found")
             return
@@ -518,17 +533,16 @@ class CustomSettings:
                 "RecentFiles\tRecent1\t\\EDMM\\ASR\\TWR_PHX\\EDDM_GND.asr\n",
                 "RecentFiles\tRecent2\t\\EDMM\\ASR\\TWR_PHX\\ALL_EDMM_TWR.asr\n"
             ]
-            
+
             filtered_lines.extend(new_recent_files)
 
             with open(twr_night_profile, "w", encoding="iso-8859-1") as f:
                 f.writelines(filtered_lines)
 
-            print(f"      ✓ Updated recent files in EDMM TWR PHX Night profile")
+            print("      ✓ Updated recent files in EDMM TWR PHX Night profile")
 
         except Exception as e:
             print(f"      ⚠️  Error updating EDMM TWR PHX Night recent files: {e}")
-
 
     # ============================================================================
     # HELPER METHODS - USE THESE TO CREATE CUSTOMIZATIONS
