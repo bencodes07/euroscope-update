@@ -143,6 +143,34 @@ class CustomSettings:
                 "Chat:name unread": "16777215:3.5:0:0:7",
             },
         )
+        
+        # ===== EDGG Symbology Settings =====
+        self.update_file(
+            base_dir / "EDGG/Settings/EDGG/Symbology.txt",
+            {
+                "Datablock:non concerned": "11173320:4.0:0:0:7",
+                "Datablock:notified": "13137935:4.0:0:0:7",
+                "Datablock:assumed":"0:4.0:0:0:7",
+                "Datablock:transfer to me initiated":"0:4.0:0:0:7",
+                "Datablock:redundant":"7237230:4.0:0:0:7",
+                "Datablock:information":"20735:4.0:0:0:7",
+                "Datablock:even flight level":"11974326:4.0:0:0:7",
+                "Datablock:odd flight level":"39835:4.0:0:0:7",
+                "Datablock:arrivals":"15737892:4.0:0:0:7",
+                "Datablock:departures":"25600:4.0:0:0:7",
+                "Datablock:user 1":"0:4.0:0:0:7",
+                "Datablock:user 2":"23040:4.0:0:0:7",
+                "Datablock:user 3":"16777215:4.0:0:0:7",
+                "Datablock:user 4":"16777215:4.0:0:0:7",
+                "Datablock:user 5":"16777215:4.0:0:0:7",
+                "Datablock:user 6":"16777215:4.0:0:0:7",
+                "Datablock:emergency":"1645025:4.0:0:0:7",
+                "Datablock:ongoing requested by me":"693910:4.0:0:0:7",
+                "Datablock:ongoing requested by other":"11146480:4.0:0:0:7",
+                "Datablock:ongoing accepted":"2263842:4.0:0:0:7",
+                "Datablock:ongoing refused":"32225:4.0:0:0:7",
+            }
+        )
 
         # ===== EDGG Departure List Settings =====
         self.update_file(
