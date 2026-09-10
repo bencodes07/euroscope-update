@@ -160,6 +160,9 @@ self.replace_in_file(file_path, r'old_text', 'new_text')
 # Add lines at the end of a file
 self.add_lines_to_file(file_path, ['line1', 'line2',])
 
+# Add lines only if they aren't already there (safe to re-run each AIRAC)
+self.add_lines_if_missing(file_path, ['Plugin:KeyA:1', 'Plugin:KeyB:2'])
+
 # Copy files around
 self.copy_file(source_file, target_file)
 ```

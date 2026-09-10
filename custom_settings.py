@@ -182,6 +182,16 @@ class CustomSettings:
             base_dir / "EDGG/Settings/PHX/StartupList.txt", {"m_Visible": "0"}
         )
 
+        # ===== PHX CDM Plugin - window position / minimized state =====
+        self.add_lines_if_missing(
+            base_dir / "EDGG/Settings/PHX/Plugins.txt",
+            [
+                "CDM Plugin:CDMWindowPositionX:2240",
+                "CDM Plugin:CDMWindowPositionY:26",
+                "CDM Plugin:CDMMinimized:1",
+            ],
+        )
+
         # ===== Traffic Management List Positions =====
         self.replace_in_file(
             base_dir / "EDGG/Settings/EDGG/Plugins.txt",
@@ -719,6 +729,74 @@ class CustomSettings:
                     f.write(line + "\n")
 
             print(f"      ✓ Added {len(lines_to_add)} lines in {file_path.name}")
+
+        except Exception as e:
+            print(f"      ⚠️  Error updating {file_path.name}: {e}")
+
+    def add_lines_if_missing(self, file_path: Path, lines_to_add, delimiter: str = ":"):
+        """
+        Add lines to a file only when they are not already present.
+
+        Unlike add_lines_to_file this is safe to run on every AIRAC update: a
+        fresh package ships the file without these lines so they get added,
+        and once they are there a re-run leaves the file untouched.
+
+        A line counts as "already present" when another line shares its key,
+        i.e. everything up to the last delimiter. That way a value the user
+        later tweaked by hand (e.g. a new window position) is kept instead of
+        being duplicated.
+
+        New lines are inserted before a trailing "END" marker when the file
+        has one, otherwise appended at the end.
+
+        Args:
+            file_path: Path to the file
+            lines_to_add: Lines to ensure are present
+            delimiter: Character separating the key from its value
+        Example:
+            self.add_lines_if_missing(file_path, [
+                'CDM Plugin:CDMWindowPositionX:2240',
+                'CDM Plugin:CDMMinimized:1',
+            ])
+        """
+        if not file_path.exists():
+            return
+
+        try:
+            with open(file_path, "r", encoding="iso-8859-1") as f:
+                lines = f.read().splitlines()
+
+            existing_keys = {
+                line.rsplit(delimiter, 1)[0].strip()
+                for line in lines
+                if delimiter in line
+            }
+
+            missing = [
+                line
+                for line in lines_to_add
+                if line.rsplit(delimiter, 1)[0].strip() not in existing_keys
+            ]
+
+            if not missing:
+                print(f"      ✓ {file_path.name} already has the lines, nothing to do")
+                return
+
+            # Drop the new lines in before a trailing END marker if there is one
+            insert_at = len(lines)
+            for i in range(len(lines) - 1, -1, -1):
+                if not lines[i].strip():
+                    continue
+                if lines[i].strip() == "END":
+                    insert_at = i
+                break
+
+            lines[insert_at:insert_at] = missing
+
+            with open(file_path, "w", encoding="iso-8859-1") as f:
+                f.write("\n".join(lines) + "\n")
+
+            print(f"      ✓ Added {len(missing)} missing lines in {file_path.name}")
 
         except Exception as e:
             print(f"      ⚠️  Error updating {file_path.name}: {e}")
